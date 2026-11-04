@@ -80,9 +80,10 @@ jobs:
         run: |
           docker compose exec -T db psql -U hire -d hire -c "SELECT count(*) AS total_jobs FROM jobs;"
           docker compose exec -T db psql -U hire -d hire -c "SELECT count(*) AS open_jobs FROM jobs WHERE closed_at IS NULL;"
-          docker compose exec -T db psql -U hire -d hire -c "SELECT count(*) AS canada_jobs FROM jobs WHERE 'CA' = ANY(countries);"
-          docker compose exec -T db psql -U hire -d hire -c "SELECT count(*) AS slice_jobs FROM jobs WHERE 'CA' = ANY(countries) AND is_tech;"
-          docker compose exec -T db psql -U hire -d hire -c "SELECT title, cities, countries, work_mode, category FROM jobs WHERE 'CA' = ANY(countries) LIMIT 5;"
+                docker compose exec -T db psql -U hire -d hire -c "SELECT DISTINCT unnest(countries) FROM jobs;"
+          docker compose exec -T db psql -U hire -d hire -c "SELECT count(*) AS canada_jobs FROM jobs WHERE 'ca' = ANY(countries);"
+          docker compose exec -T db psql -U hire -d hire -c "SELECT count(*) AS slice_jobs FROM jobs WHERE 'ca' = ANY(countries) AND is_tech;"
+          docker compose exec -T db psql -U hire -d hire -c "SELECT title, cities, countries, work_mode, category FROM jobs WHERE 'ca' = ANY(countries) LIMIT 5;"
 
       - name: Resource snapshot (runner numbers - NOT VPS sizing proof)
         if: always()
